@@ -1,7 +1,7 @@
 <template>
   <div class="container grid-xs py-2">
     <h1 class="logo">Todo</h1>
-    <form @submit.prevent="addTodo(todo)">
+    <form @submit.prevent="add(todo)">
       <div class="input-group">
         <input
           type="text"
@@ -9,7 +9,9 @@
           class="form-input"
           placeholder="Nova Tarefa"
         />
-        <button class="btn btn-primary input-group-btn">Adicionar</button>
+        <button class="btn btn-primary input-group-btn" :class="{ loading }">
+          Adicionar
+        </button>
       </div>
     </form>
 
@@ -27,35 +29,27 @@
 
 <script>
 import TodoItem from "@/components/TodoItem";
+import { mapActions, mapState } from "vuex";
 
 export default {
   name: "App",
   components: { TodoItem },
   data() {
     return {
-      todos: [],
       todo: { checked: false },
     };
   },
-  methods: {
-    addTodo(todo) {
-      todo.id = Date.now();
-      this.todos.push(todo);
-      this.todo = { checked: false };
-    },
 
-    toggleTodo(todo) {
-      const index = this.todos.findIndex((item) => item.id === todo.id);
-      if (index > -1) {
-        const checked = !this.todos[index].checked;
-        this.$set(this.todos, index, { ...this.todos[index], checked });
-      }
-    },
-    removeTodo(todo) {
-      const index = this.todos.findIndex((item) => item.id === todo.id);
-      if (index > -1) {
-        this.$delete(this.todos, index);
-      }
+  computed: {
+    ...mapState(["todos", "loading"]),
+  },
+
+  methods: {
+    ...mapActions(["addTodo", "toggleTodo", "removeTodo"]),
+
+    async add(todo) {
+      await this.addTodo(todo);
+      this.todo = { checked: false };
     },
   },
 };

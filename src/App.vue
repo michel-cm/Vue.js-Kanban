@@ -3,8 +3,8 @@
     <div class="container grid-lg">
       <header class="navbar pt-2">
         <section class="navbar-section">
-          <router-link to="/" class="btn btn-link">Todo</router-link>
-          <router-link to="/kanban" class="btn btn-link">Kanban</router-link>
+          <router-link to="/" class="btn-link">Todo</router-link>
+          <router-link to="/kanban" class="btn-link">Kanban</router-link>
         </section>
       </header>
       <router-view />
@@ -16,4 +16,11 @@
 export default {};
 </script>
 
-<style scoped></style>
+<style scoped>
+.navbar-section a {
+  margin-right: 0.5rem;
+}
+.navbar-section .router-link-exact-active {
+  color: red;
+}
+</style>
