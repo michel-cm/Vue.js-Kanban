@@ -14,7 +14,7 @@ const actions = {
         commit("addTodo", todo);
         commit("setLoading", false);
         resolve(todo);
-      }, 500);
+      }, 400);
     });
   },
 
@@ -24,6 +24,23 @@ const actions = {
 
   removeTodo({ commit }, todo) {
     commit("removeTodo", todo);
+  },
+
+  checkAll({ commit, state }) {
+    const uncheckedsIds = state.todos
+      .filter((i) => !i.checked)
+      .map((i) => i.id);
+    commit("toggleList", uncheckedsIds);
+  },
+
+  uncheckAll({ commit, state }) {
+    const checkedsIds = state.todos.filter((i) => i.checked).map((i) => i.id);
+    commit("toggleList", checkedsIds);
+  },
+
+  removeAllCheckeds({ commit, state }) {
+    const checkedsIds = state.todos.filter((i) => i.checked).map((i) => i.id);
+    commit("removeList", checkedsIds);
   },
 };
 
@@ -46,6 +63,18 @@ const mutations = {
 
   removeTodo(state, payload) {
     state.todos = state.todos.filter((item) => item.id !== payload.id);
+  },
+
+  toggleList(state, todosIds) {
+    const todos = state.todos.map((i) => {
+      return todosIds.includes(i.id) ? { ...i, checked: !i.checked } : i;
+    });
+    state.todos = todos;
+  },
+
+  removeList(state, todoIds) {
+    const todos = state.todos.filter((item) => !todoIds.includes(item.id));
+    state.todos = todos;
   },
 };
 
